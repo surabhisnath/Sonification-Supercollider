@@ -6,8 +6,6 @@ Advantages: Large, detailed data can often not be represents through visual stra
 
 Aim: To represent chronological and spatial data through sound
 
-Materials and Methods
-
 We plan to work on the following:
 
 1) Twelve year data (2001 - 2012) of increase in crime against women in Indian States 
