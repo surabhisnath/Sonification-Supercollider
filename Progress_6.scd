@@ -97,6 +97,8 @@ SynthDef.new(\one,
 
 //--------------------------
 
+~points = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42];
+
 (
 ~data_abstract_shape = CSVFileReader.read("C:/Users/Surabhi/Desktop/IIITD/IP/Animation_Data/abstractShape_pointwise.csv",true);
 ~data_abstract_shape.removeAt(0);
@@ -136,9 +138,9 @@ for (0, 41, { arg i; (i*239).postln;
 		~temp3[j] = ~newarr[~ind][5];
 	});
 
-	~temp1 = ~temp1.normalize(100,333);
-	~temp2 = ~temp2.normalize(333,666);
-	~temp3 = ~temp3.normalize(666,1000);
+	~temp1 = ~temp1.normalize(24*i+200,24*i+208);
+	~temp2 = ~temp2.normalize(24*i+208,24*i+216);
+	~temp3 = ~temp3.normalize(24*i+216,24*i+224);
 
 	for(0, 238, {arg j; (i*239+j).postln;
 		~ind = (i*239+j);
@@ -148,6 +150,11 @@ for (0, 41, { arg i; (i*239).postln;
 	});
 });
 );
+
+
+
+
+
 
 (
 ~pseqarrx = 0!239;
@@ -230,6 +237,11 @@ h[2] = h[2].normalize(0,2);
 
 
 )
+
+
+
+
+
 
 //-------------------------------------------------------------------------------------------------------
 //GUI
@@ -368,6 +380,7 @@ w.background_(Color.white);
 				~play = Button(~w2,Rect.new(450,300,100,40))
 				.states = [["Play", Color.red],["Play", Color.red]];
 				~play.action = {
+					s.freeAll;
 					if(~sound == 0,
 						{~sig = {SinOsc.ar(EnvGen.ar(Env(~data2[~crime*~numstates+~state].asInteger,[~dur!11]),doneAction:2))};
 							~sig.play;});
@@ -445,24 +458,11 @@ w.background_(Color.white);
 				~play = Button(~w2,Rect.new(450,330,100,40))
 				.states = [["Play", Color.red],["Play", Color.red]];
 				~play.action = {
-					var en1, en2, en3;
-
-					s.freeAll;
-
-					en1 = Env.new((~data2[~crime1*~numstates+~state]).asInteger,[~dur!11],5);
-					en2 = Env.new((~data2[~crime2*~numstates+~state]).asInteger,[~dur!11],5);
-					en3 = Env.new((~data2[~crime3*~numstates+~state]).asInteger,[~dur!11],5);
-					z = [en1,en2,en3];
-
-
-					a = {SinOsc.ar(EnvGen.kr(z[0],doneAction:2))*0.25};
-					b = {Pulse.ar(EnvGen.kr(z[1],doneAction:2))*0.25};
-					c = {Formant.ar(EnvGen.kr(z[2],doneAction:2))*0.25};
-
+					//s.freeAll;
 					(
-					a.play;
-					b.play;
-					c.play;
+					a = {SinOsc.ar(EnvGen.kr(Env.new((~data2[~crime1*~numstates+~state]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
+					b = {Pulse.ar(EnvGen.kr(Env.new((~data2[~crime2*~numstates+~state]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
+					c = {Formant.ar(EnvGen.kr(Env.new((~data2[~crime3*~numstates+~state]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
 					);
 				};
 
@@ -530,24 +530,10 @@ w.background_(Color.white);
 				~play = Button(~w2,Rect.new(450,330,100,40))
 				.states = [["Play", Color.red],["Play", Color.red]];
 				~play.action = {
-					var en1, en2, en3;
-
-					s.freeAll;
-
-					en1 = Env.new((~data2[~crime*~numstates+~state1]).asInteger,[~dur!11],5);
-					en2 = Env.new((~data2[~crime*~numstates+~state2]).asInteger,[~dur!11],5);
-					en3 = Env.new((~data2[~crime*~numstates+~state3]).asInteger,[~dur!11],5);
-					z = [en1,en2,en3];
-
-
-					a = {SinOsc.ar(EnvGen.kr(z[0],doneAction:2))*0.25};
-					b = {Pulse.ar(EnvGen.kr(z[1],doneAction:2))*0.25};
-					c = {Formant.ar(EnvGen.kr(z[2],doneAction:2))*0.25};
-
 					(
-					a.play;
-					b.play;
-					c.play;
+					a = {SinOsc.ar(EnvGen.kr(Env.new((~data2[~crime*~numstates+~state1]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
+					b = {Pulse.ar(EnvGen.kr(Env.new((~data2[~crime*~numstates+~state2]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
+					c = {Formant.ar(EnvGen.kr(Env.new((~data2[~crime*~numstates+~state3]).asInteger,[~dur!11],5),doneAction:2))*0.25}.play;
 					);
 				};
 
@@ -572,7 +558,7 @@ w.background_(Color.white);
 				~state = 0;
 				~crime = 0;
 				~year1 = 0;
-				~year2 = 11;
+				~year2 = 0;
 				//
 
 				~label3 = StaticText.new(~w2,Rect.new(200,100,275,30))
@@ -834,28 +820,59 @@ w.background_(Color.white);
 				~w2.front;
 				~w2.alwaysOnTop_(true);
 				~w2.background_(Color.white);
-				//
 
-				//Routines and Patterns
-				//Var for given point across frames
-				/*(
-					~rout1 = Routine({
-						for(0, 238, {
-							arg j; (0*239+j).postln;
-							0.03.yield;
-							~newarr[j][3].postln;
-							~newarr[j][4].postln;
-							~newarr[j][5].postln;
-							Pbind(\freq,Pseq([~newarr[j][3],~newarr[j][4],~newarr[j][5]],1),\dur,0.01).play;
+				~point = 0;
+				~yield = 0.1;
+				~dur = 0.03;
+				//
+				~label3 = StaticText.new(~w2,Rect.new(362.5,100,275,30))
+				.string_("Choose point")
+				.font_(Font("Monaco",14));
+				~choosepoint = PopUpMenu(~w2,Rect.new(362.5,130,275,30))
+				.items_(~points);
+				~choosepoint.action = {~point = ~choosepoint.value;};
+
+				~label4 = StaticText.new(~w2,Rect.new(200,200,275,30))
+				.string_("Select speed")
+				.font_(Font("Monaco",14));
+				~choosedur = EZSlider.new(~w2,Rect.new(200,230,275,30),controlSpec:ControlSpec(1,100));
+				~choosedur.action = {~dur = 1/~choosedur.value;};
+
+				~label5 = StaticText.new(~w2,Rect.new(525,200,275,30))
+				.string_("Select yield")
+				.font_(Font("Monaco",14));
+				~chooseyield = EZSlider.new(~w2,Rect.new(525,230,275,30),controlSpec:ControlSpec(0.03,3));
+				~chooseyield.action = {~yield = ~chooseyield.value;};
+
+				~play = Button(~w2,Rect.new(450,300,100,40))
+				.states = [["Play", Color.red],["Play", Color.red]];
+				~play.action = {
+					(
+						~part21 = Routine({
+							//	for (0, 41, { arg i; (i*239).postln;
+							for(0, 238, {arg j; (40*239+j).postln;
+
+								~yield.yield;
+								~newarr[~point*239+j][3].postln;
+								~newarr[~point*239+j][4].postln;
+								~newarr[~point*239+j][5].postln;
+								Pbind(\freq,Pseq([~newarr[~point*239+j][3],~newarr[~point*239+j][4],~newarr[~point*239+j][5]],1),\dur,~dur).play;
+							});
+							//	});
 						});
-					});
-				)
-				~rout1.play;*/
+					);
+
+					r = ~part21.play;
+				};
+
+
 
 				//
 				~back1 = Button(~w2,Rect.new(465,420,70,30));
 				~back1.states = [["Back", Color.black],["Back", Color.black, Color.red]];
 				~back1.action = {
+					r.stop;
+					//s.freeAll;
 					~w2.close;
 					~w1.visible_(true);
 				}
