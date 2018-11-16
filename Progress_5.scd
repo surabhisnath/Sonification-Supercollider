@@ -129,14 +129,13 @@ for(42, 10037, {arg i;
 a = {0!239}!42;
 )
 
-
 (
 (
 for (0, 238, { arg i;
 
 	for(0, 41, {arg j;
-		~ind = (i*42+j);
-		a[j][i] = ~store[~ind].asFloat;
+		~inde = (i*42+j);
+		a[j][i] = ~store[~inde].asFloat;
 	});
 });
 );
@@ -147,8 +146,6 @@ for(0,41,{arg i;
 });
 )
 
-
-
 (
 x = 880!14;
 y = 1108!14;
@@ -158,7 +155,7 @@ z = 1318!14;
 )
 
 
-~go = 0.01;
+~go = 0.1;
 (
 ~rout = Routine({
 	for(0, 119, {arg i;

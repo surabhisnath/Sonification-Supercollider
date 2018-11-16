@@ -65,9 +65,9 @@ for (0, 41, { arg i; (i*239).postln;
 		~temp3[j] = ~newarr[~ind][5];
 	});
 
-	~temp1 = ~temp1.normalize(100,333);
-	~temp2 = ~temp2.normalize(333,666);
-	~temp3 = ~temp3.normalize(666,1000);
+	~temp1 = ~temp1.normalize(24*i+200,24*i+208);
+	~temp2 = ~temp2.normalize(24*i+208,24*i+216);
+	~temp3 = ~temp3.normalize(24*i+216,24*i+224);
 
 	for(0, 238, {arg j; (i*239+j).postln;
 		~ind = (i*239+j);
@@ -78,19 +78,49 @@ for (0, 41, { arg i; (i*239).postln;
 });
 )
 
+(
+for (0, 41, { arg i; (i*239).postln;
+	~temp1 = 0!239;
+	~temp2 = 0!239;
+	~temp3 = 0!239;
+
+	for(0, 238, {arg j; (i*239+j).postln;
+		~ind = (i*239+j);
+		~temp1[j] = ~newarr1[~ind,3];
+		~temp2[j] = ~newarr1[~ind,4];
+		~temp3[j] = ~newarr1[~ind,5];
+	});
+
+	~temp1 = ~temp1.normalize(200,500);
+	~temp2 = ~temp2.normalize(500,800);
+	~temp3 = ~temp3.normalize(800,1100);
+
+	for(0, 238, {arg j; (i*239+j).postln;
+		~ind = (i*239+j);
+		~newarr1[~ind,3] = ~temp1[j];
+		~newarr1[~ind,4] = ~temp2[j];
+		~newarr1[~ind,5] = ~temp3[j];
+	});
+});
+)
+
+
 
 //Routines and Patterns
 //Var for given point across frames
+~yield = 0.75;
+~dur = 0.25
+~point = 30
 (
 ~rout1 = Routine({
 //	for (0, 41, { arg i; (i*239).postln;
-	for(0, 238, {arg j; (0*239+j).postln;
+	for(0, 238, {arg j; (40*239+j).postln;
 
-			0.03.yield;
-			~newarr[j][3].postln;
-			~newarr[j][4].postln;
-			~newarr[j][5].postln;
-			Pbind(\freq,Pseq([~newarr[j][3],~newarr[j][4],~newarr[j][5]],1),\dur,0.01).play;
+			~yield.yield;
+			~newarr[~point*239+j][3].postln;
+			~newarr[~point*239+j][4].postln;
+			~newarr[~point*239+j][5].postln;
+			Pbind(\freq,Pseq([~newarr[~point*239+j][3],~newarr[~point*239+j][4],~newarr[~point*239+j][5]],1),\dur,~dur).play;
 		});
 //	});
 });
@@ -102,7 +132,7 @@ for (0, 41, { arg i; (i*239).postln;
 //s.record("C:/Users/Surabhi/Desktop/IIITD/IP/Recordings/out.wav");
 ~rout1.play;
 )
-
+~glo = 4
 //Stop recorder and routine
 (
 //s.stopRecording;
@@ -138,24 +168,27 @@ Pbind(\freq,Pseq(~pseqarrz.normalize(100,1000),1),\dur,0.1).play;//How z coordin
 
 //Make synthdefs and send data as arguements
 
+~xc = 400;
+~yc = 300;
+~zc = 800;
 (
 ~xcoord = {
-	arg value = 500;
-	var sig, noise, xadd, temp, amp;
-	amp = Line.kr(2,0,1);
-	sig = Saw.ar(value/2+rrand(10,20),amp);
+	//arg value = 500;
+	//var sig, noise, xadd, temp, amp;
+	//amp = Line.kr(2,0,1);
+	Saw.ar(~xc/2+rrand(10,20),Line.kr(2,0,1));
 }.play;
 ~ycoord = {
-	arg value = 500;
-	var env, sig, yadd;
-	env = Env.perc;
-	yadd = EnvGen.ar(env, doneAction: 0) * Pulse.ar(value, 0.25, 0.75);
+	//arg value = 500;
+	//var env, sig, yadd;
+	//env = Env.perc;
+	EnvGen.ar(Env.perc, doneAction: 0) * Pulse.ar(~yc, 0.25, 0.75);
 }.play;
 ~zcoord = {
-	arg value=500;
-	var amp, zadd;
-	amp = Line.kr(2,0,1);
-	zadd = SinOsc.ar(value,0,amp);
+	//arg value=500;
+	//var amp, zadd;
+	//amp = Line.kr(2,0,1);
+	SinOsc.ar(~zc,0,Line.kr(2,0,1));
 }.play;
 )
 
@@ -204,7 +237,7 @@ Synth.new(\zcoord);
 
 (
 ~tasktest=Task({|i|
-	~xc= Synth.new(\xcoord, [
+	/*~xc= Synth.new(\xcoord, [
 		\value, ~newarr[0][3],
 	]);
 	~yc= Synth.new(\ycoord, [
@@ -212,17 +245,17 @@ Synth.new(\zcoord);
 	]);
 	~zc= Synth.new(\zcoord, [
 		\value, ~newarr[0][5],
-	]);
+	]);*/
 
 	238.do({arg item, i;
-		var one, two, three;
 
-	    one = ~newarr[i][3];
-		two = ~newarr[i][4];
-		three = ~newarr[i][5];
-		one.postln;
-		two.postln;
-		three.postln;
+		(
+			~xcoord = {Saw.ar([~newarr1[i,3]/2,~newarr1[i,3]/2],Line.kr(1,0,~dur));}.play;
+			~ycoord = {EnvGen.ar(Env.perc(releaseTime:~dur), doneAction: 0) * Pulse.ar([~newarr1[i,4],~newarr1[i,4]], 0.25, 0.75);}.play;
+			~zcoord = {SinOsc.ar([~newarr1[i,5],~newarr1[i,5]],0,Line.kr(1,0,~dur));}.play;
+		);
+
+
 		/*Synth.new(\xcoord, [
 		\value, ~newarr[i][3]]);
 		Synth.new(\ycoord, [
@@ -230,17 +263,21 @@ Synth.new(\zcoord);
 		Synth.new(\zcoord, [
 		\value, ~newarr[i][5]]);*/
 		//~xc.set(\xcoord, one);
-		~yc.set(\t_gate,1,\value, two);
+		//~yc.set(\t_gate,1,\value, two);
 		//~zc.set(\zcoord, three);
-		1.wait;
-		s.freeAll;
+
+		~dur.wait;
+
+		~xcoord.free;
+		~ycoord.free;
+		~zcoord.free;
 	})
 });
 )
 
 ~tasktest.play;
-
-
+~dur = 0.05
+{SinOsc.ar([1200,200])}.play
 
 //----------------------------------------------------------------------------------------------------
 //Tgrains
