@@ -1,6 +1,6 @@
 # Sonification Supercollider
 
-What is Sonification: Sonification is a process and field of study wherein data is represented through sound. As visual graphs, charts are a common way for expressing data, similarly, sound can also act as an affective mode of communicating data.
+Sonification is a process and field of study wherein data is represented through sound. As visual graphs, charts are a common way for expressing data, similarly, sound can also act as an affective mode of communicating data.
 
 Advantages: Large, detailed data can often not be represents through visual strategies and sonification comes in very useful here.
 
